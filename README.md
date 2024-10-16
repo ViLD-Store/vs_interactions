@@ -61,4 +61,4 @@ Have questions or suggestions? Join our community and get help:
 
 ## License
 
-`vs_carstealing` is licensed under the MIT License. For more details, see the [LICENSE](./LICENSE) file.
+`vs_interactions` is licensed under the MIT License. For more details, see the [LICENSE](./LICENSE) file.
