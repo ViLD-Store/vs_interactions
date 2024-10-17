@@ -5,7 +5,31 @@ local function switchOption(direction)
 end
 
 function canInteract()
-    return not LocalPlayer.state.isDead and not cache.vehicle and not LocalPlayer.state.isCuffed
+    return not LocalPlayer.state.isDead and not cache.vehicle and not LocalPlayer.state.isCuffed and not IsPauseMenuActive() and not lib.progressActive()
+end
+
+-- RegisterCommand('test_model', function()
+--     getClosestModel(GetEntityCoords(cache.ped), 4.0, 'elegy')
+-- end)
+
+function getClosestModel(coords, distance, model)
+    local hashModel = GetHashKey(model)
+    local veh, vehCoords = lib.getClosestVehicle(coords, distance, true)
+    if veh and veh ~= 0 and joaat(GetEntityModel(veh)) == hashModel then
+        return veh, vector3(vehCoords.x, vehCoords.y, vehCoords.z + 0.5)
+    end
+
+    local obj, objCoords = lib.getClosestObject(coords, distance)
+    if obj and obj ~= 0 and joaat(GetEntityModel(obj)) == hashModel then
+        return obj, objCoords
+    end
+    
+    local ped, pedCoords = lib.getClosestPed(coords, distance)
+    if ped and ped ~= 0 and joaat(GetEntityModel(ped)) == hashModel then
+        return ped, pedCoords
+    end
+
+    return nil
 end
 
 local lastOptions = {}
@@ -23,7 +47,7 @@ function sortOptions(data)
         end
 
         if option.canInteract then
-            if not option.canInteract() then
+            if not option.canInteract(data.tempEntity, data.coords) then
                 optionsCount -= 1
                 sortedOptions[id] = nil
             else
@@ -79,7 +103,8 @@ RegisterNUICallback('ConfirmSelect', function(data, cb)
         return
     end
 
-    local optionData = globalOptions[globalId].options[optionId]
+    local optionsData = globalOptions[globalId]
+    local optionData = optionsData.options[optionId]
     if not optionData then
         return
     end
@@ -90,6 +115,6 @@ RegisterNUICallback('ConfirmSelect', function(data, cb)
     elseif optionData.command then
         ExecuteCommand(optionData.command)
     elseif optionData.onSelect then
-        optionData.onSelect()
+        optionData.onSelect({entity = optionsData.tempEntity, coords = optionsData.coords})
     end
 end)

@@ -68,7 +68,7 @@ local function showInteraction(data)
     end
 end
 
-local function HideInteraction()
+function HideInteraction()
     SendNUIMessage({action = 'HideInteraction'})
 end
 
@@ -93,26 +93,45 @@ Citizen.CreateThread(function()
                     local ped, pedCoords = lib.getClosestPed(cacheCoords, itemDistance * 2.5)
                     if ped and ped ~= 0 then
                         globalItem.coords = pedCoords
+                        globalItem.tempEntity = ped
                     else
+                        globalItem.tempEntity = nil
                         globalItem.coords = nil
                     end
                 elseif itemType == 'globalVehicle' then
                     local vehicle, vehCoords = lib.getClosestVehicle(cacheCoords, itemDistance * 2.25, true)
                     if vehicle and vehicle ~= 0 then
                         globalItem.coords = vehCoords
+                        globalItem.tempEntity = vehicle
                     else
+                        globalItem.tempEntity = nil
                         globalItem.coords = nil
                     end
                 elseif itemType == 'localEntity' then
                     if DoesEntityExist(globalItem.entity) then
                         globalItem.coords = GetEntityCoords(globalItem.entity)
+                        globalItem.tempEntity = globalItem.entity
                     else
+                        globalItem.tempEntity = nil
                         globalItem.coords = nil
                     end
                 elseif itemType == 'netEntity' then
                     local netEntity = NetworkGetEntityFromNetworkId(globalItem.entity)
                     if netEntity and netEntity ~= 0 and DoesEntityExist(netEntity) then
                         globalItem.coords = GetEntityCoords(netEntity)
+                        globalItem.tempEntity = netEntity
+                    else
+                        globalItem.tempEntity = nil
+                        globalItem.coords = nil
+                    end
+                elseif itemType == 'globalModel' then
+                    local closestModel, closestCoords = getClosestModel(cacheCoords, itemDistance, globalItem.model)
+                    if closestModel then
+                        globalItem.coords = closestCoords
+                        globalItem.tempEntity = closestModel
+                    else
+                        globalItem.tempEntity = nil
+                        globalItem.coords = nil
                     end
                 end
             end
@@ -130,7 +149,7 @@ Citizen.CreateThread(function()
 
         if newId then
             for k, v in pairs(visibleOptions) do
-                if k ~= newId then
+                if k ~= newId and globalOptions[k] then
                     globalOptions[k].display = false
                     globalOptions[k].isClose = false
                 end
@@ -139,12 +158,14 @@ Citizen.CreateThread(function()
         else
             local wasDisplayed = false
             for k, v in pairs(visibleOptions) do
-                if globalOptions[k].display then
-                    wasDisplayed = true
+                if globalOptions[k] then
+                    if globalOptions[k].display then
+                        wasDisplayed = true
+                    end
+    
+                    globalOptions[k].display = false
+                    globalOptions[k].isClose = false
                 end
-
-                globalOptions[k].display = false
-                globalOptions[k].isClose = false
             end
             
             if wasDisplayed then
