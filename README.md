@@ -31,7 +31,6 @@ exports.vs_interactions:addLocalEntity({
     options = {
         {
             label = 'Test',
-            type = 'function', -- Can be event / serverEvent / function / command
             event = 'vs_interactions:BuyCoffee', -- Example serverEvent
             onSelect = function()  
                 -- Code executed upon selection
