@@ -22,27 +22,8 @@ Follow these simple steps to install `vs_interactions`:
 ## Usage Example
 
 You can easily add a local entity with customizable interaction options using this export function:
+[Docs](https://docs.vildstore.com/)
 
-```lua
-exports.vs_interactions:addLocalEntity({
-    entity = spawnedPed, -- Ped entity
-    icon = "fa-solid fa-user-ninja", -- optional (from fontawesome.com)
-    distance = 2.0, -- Interaction distance
-    options = {
-        {
-            label = 'Test',
-            event = 'vs_interactions:BuyCoffee', -- Example serverEvent
-            onSelect = function()  
-                -- Code executed upon selection
-            end,
-            canInteract = function()
-                -- Conditions to check if interaction is possible
-                return true
-            end
-        },
-    }
-})
-```
 Additional functions can be found in the `client/exports.lua` file.
 
 ---
