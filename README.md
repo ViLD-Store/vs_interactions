@@ -19,13 +19,8 @@ Follow these simple steps to install `vs_interactions`:
 3. **Edit** your `server.cfg` to include `ensure vs_interactions` to load the resource.
 4. **Restart** your server and enjoy dynamic interactions in-game!
 
-## Usage Example
-
-You can easily add a local entity with customizable interaction options using this export function:
+## Usage
 [Docs](https://docs.vildstore.com/)
-
-Additional functions can be found in the `client/exports.lua` file.
-
 ---
 
 ## Support & Community
