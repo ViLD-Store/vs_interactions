@@ -21,6 +21,7 @@ Follow these simple steps to install `vs_interactions`:
 
 ## Usage
 [Docs](https://docs.vildstore.com/)
+
 ---
 
 ## Support & Community
